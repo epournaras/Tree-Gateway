@@ -1,8 +1,8 @@
-[Oct 13 17:21:50] ERROR (NetworkInterface.java:93) - 
+[Apr 11 18:21:29] ERROR (NetworkInterface.java:93) - 
 java.lang.NullPointerException
-	at tree.centralized.client.TreeClient.deliverTreeView(TreeClient.java:173)
-	at tree.centralized.client.TreeClient.runPassiveState(TreeClient.java:135)
-	at tree.centralized.client.TreeClient.handleIncomingMessage(TreeClient.java:185)
+	at tree.centralized.client.TreeClient.deliverTreeView(TreeClient.java:186)
+	at tree.centralized.client.TreeClient.runPassiveState(TreeClient.java:148)
+	at tree.centralized.client.TreeClient.handleIncomingMessage(TreeClient.java:198)
 	at protopeer.Peer.fireHandleIncomingMesage(Peer.java:390)
 	at protopeer.Peer.access$200(Peer.java:24)
 	at protopeer.Peer$PeerNetworkListener.messageReceived(Peer.java:49)
@@ -12,4 +12,4 @@ java.lang.NullPointerException
 	at protopeer.time.EventScheduler.executeNextEvent(EventScheduler.java:107)
 	at protopeer.time.EventScheduler.run(EventScheduler.java:122)
 	at protopeer.SimulatedExperiment.runSimulation(SimulatedExperiment.java:64)
-	at testApp.ClientServerTreeAggregation.main(ClientServerTreeAggregation.java:67)
+	at testApp.ClientServerTreeAggregation.main(ClientServerTreeAggregation.java:80)

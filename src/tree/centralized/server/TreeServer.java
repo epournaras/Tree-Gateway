@@ -29,6 +29,7 @@ import dsutil.generic.RankPriority;
 import protopeer.network.Message;
 import dsutil.protopeer.services.topology.trees.DescriptorType;
 import dsutil.protopeer.services.topology.trees.TreeType;
+import tree.BalanceType;
 import tree.centralized.TreeViewReply;
 import tree.centralized.TreeViewRequest;
 
@@ -76,11 +77,31 @@ public class TreeServer extends BasePeerlet{
      * the <code>TreeTopologyGenerator</code>.
      */
     public TreeServer(int N, RankPriority priority, DescriptorType descrType, TreeType treeType){
+        this(N,priority,descrType,treeType,BalanceType.WEIGHT_BALANCED);
+    }
+
+    /**
+     * Initializes the server and the topology generator with the required
+     * information.
+     *
+     * @param N the number of requests waiting before starting building the
+     * tree topology
+     * @param priority higher or lower ranks prefered during the sorting. This
+     * parameter is fed in the <code>TreeTopologyGenerator</code>.
+     * @param descrType the descriptor type based on which the sorting is
+     * performed. This parameter is fed in
+     * the <code>TreeTopologyGenerator</code>.
+     * @param treeType the type of tree to be built. This parameter is fed in
+     * the <code>TreeTopologyGenerator</code>.
+     * @param balanceType the balance of tree to be built. This parameter is fed in
+     * the <code>TreeTopologyGenerator</code>.
+     */
+    public TreeServer(int N, RankPriority priority, DescriptorType descrType, TreeType treeType, BalanceType balanceType){
         this.state=ServerState.INIT;
         this.N=N;
         this.n=0;
         this.peers=new HashSet<FingerDescriptor>();
-        this.generator=new TreeTopologyGenerator(priority, descrType, treeType);
+        this.generator=new TreeTopologyGenerator(priority, descrType, treeType, balanceType);
     }
 
     /**

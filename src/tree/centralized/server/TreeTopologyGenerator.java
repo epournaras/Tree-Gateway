@@ -31,6 +31,7 @@ import dsutil.generic.RankPriority;
 import dsutil.generic.RankedFingerComparator;
 import dsutil.protopeer.services.topology.trees.DescriptorType;
 import dsutil.protopeer.services.topology.trees.TreeType;
+import tree.BalanceType;
 
 /**
  * Creates various tree topologies given a set of peers facilitated with their
@@ -50,12 +51,13 @@ public class TreeTopologyGenerator {
     private RankPriority priority;
     private DescriptorType descrType;
     private TreeType treeType;
+    private BalanceType balanceType;
 
     /**
      * Requires information about the priority given to the ranks of the peers
      * (high ranks over low ranks or the other way around. The descriptor type
-     * based on which the appropriate rank si considered and the tree type that
-     * defines the type of topolgy built.
+     * based on which the appropriate rank is considered and the tree type that
+     * defines the type of topolgy built. The tree is weight balanced per default.
      *
      * @param priority The high ranks or the low ranks priority given for
      * shorting the peers
@@ -65,9 +67,29 @@ public class TreeTopologyGenerator {
      * low to high ranks, or high to low ranks.
      */
     public TreeTopologyGenerator(RankPriority priority, DescriptorType descrType, TreeType treeType){
+        this(priority, descrType, treeType, BalanceType.WEIGHT_BALANCED);
+    }
+    
+    /**
+     * Requires information about the priority given to the ranks of the peers
+     * (high ranks over low ranks or the other way around. The descriptor type
+     * based on which the appropriate rank is considered and the tree type that
+     * defines the type of topolgy built.
+     *
+     * @param priority The high ranks or the low ranks priority given for
+     * shorting the peers
+     * @param descrType The numeric double descriptor type on which the ranks
+     * correspond to
+     * @param treeType The type of tree built. It can be a random tree, sorted
+     * low to high ranks, or high to low ranks.
+     * @param balanceType Describes how the tree should be balanced. It can be a
+     * fully weight balanced tree, or a degenerate tree (i.e. a list)
+     */
+    public TreeTopologyGenerator(RankPriority priority, DescriptorType descrType, TreeType treeType, BalanceType balanceType){
         this.priority=priority;
         this.descrType=descrType;
         this.treeType=treeType;
+        this.balanceType=balanceType;
         this.topology=new HashMap();
     }
 
@@ -88,13 +110,13 @@ public class TreeTopologyGenerator {
         int pRight=0;
         int cLeft=1;
         int cRight=1;
-        int maxLevelSize=0;
         //2. Organize the peers appropriatelly
         this.organizePeers(buffer);
         //3. Intializing the topology with the root
         this.initTreeTopology(buffer.get(0));
         //4. Algorithm
         while(run){
+            int maxLevelSize=0;
             //4.1 Calculate the size of children level:
             for(int p=pLeft; p<=pRight; p++){
                 maxLevelSize+=this.getNumOfChildren(buffer.get(p));
@@ -130,8 +152,10 @@ public class TreeTopologyGenerator {
             }
             //4.4 Shift the parent and children sets and reset variables
             pLeft=cLeft;
-            pRight=cRight;
-            maxLevelSize=0;
+            pRight=cRight; // default: each parent can have children (weight balanced)
+            if(balanceType == BalanceType.LIST) {
+                pLeft = cRight; // only the last parent can have children
+            }
         }
         return this.topology.entrySet();
     }
