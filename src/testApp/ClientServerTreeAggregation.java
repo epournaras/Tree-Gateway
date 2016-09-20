@@ -34,6 +34,7 @@ import protopeer.util.quantities.Time;
 import dsutil.protopeer.services.topology.trees.DescriptorType;
 import dsutil.protopeer.services.topology.trees.TreeProvider;
 import dsutil.protopeer.services.topology.trees.TreeType;
+import tree.BalanceType;
 import tree.centralized.client.TreeClient;
 import tree.centralized.server.TreeServer;
 
@@ -47,12 +48,13 @@ public class ClientServerTreeAggregation extends SimulatedExperiment {
     
     //Simulation Parameters
     private final static int runDuration=400;
-    private final static int N=100;
+    private final static int N=10;
     private final static int[] v=new int[]{3};
     
     private static final RankPriority priority=RankPriority.HIGH_RANK;
     private static final DescriptorType descriptor=DescriptorType.RANK;
     private static final TreeType type=TreeType.SORTED_HtL;
+    private static final BalanceType balance=BalanceType.LIST;
 
     public static void main(String[] args) {
         
@@ -64,7 +66,7 @@ public class ClientServerTreeAggregation extends SimulatedExperiment {
             public Peer createPeer(int peerIndex, Experiment experiment) {
                 Peer newPeer = new Peer(peerIndex);
                 if (peerIndex == 0) {
-                   newPeer.addPeerlet(new TreeServer(N, priority, descriptor, type));
+                   newPeer.addPeerlet(new TreeServer(N, priority, descriptor, type, balance));
                 }
                 newPeer.addPeerlet(new TreeClient(Experiment.getSingleton().getAddressToBindTo(0), new SimplePeerIdentifierGenerator(), Math.random(), v[(int)(Math.random()*v.length)]));
                 newPeer.addPeerlet(new TreeProvider());

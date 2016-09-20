@@ -183,8 +183,8 @@ public class TreeClient extends BasePeerlet implements TreeMiddlewareInterface{
      */
     public void deliverTreeView(FingerDescriptor parent, List<FingerDescriptor> children){
         this.getTreeProvider().provideTreeView(parent, children);
-        double rp=(Double)parent.getDescriptor(DescriptorType.RANK);
-        double ri=(Double)this.localDescriptor.getDescriptor(DescriptorType.RANK);
+        //double rp=(Double)parent.getDescriptor(DescriptorType.RANK);
+        //double ri=(Double)this.localDescriptor.getDescriptor(DescriptorType.RANK);
     }
 
     /**
